@@ -1,48 +1,43 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import Task from './components/Task/Task';
 import './App.css';
 
 function App() {
-  const list = [];
-
+  const [tasks, setTasks] = useState([]);
   const modal = useRef(null);
-
   const titleInput = useRef(null);
   const descriptionInput = useRef(null);
 
-  const createTask = () => {
+  const openModalToCreateTask = () => {
     modal.current.show();
+  };
 
-    /*const task = {};
-    task.title = `Heading ${Math.floor(Math.random() * (10 - 1) + 1)}`;
-    task.author = `${authors[Math.floor(Math.random() * (4 - 0) + 0)]}`;
-
-    list.push(task);
-    console.log(list);*/
+  const closeModalToCancelTask = () => {
+    modal.current.close();
   };
 
   const addTask = () => {
     const task = {};
     task.title = `${titleInput.current.value}`;
     task.description = `${descriptionInput.current.value}`;
+    task.id = Math.floor(Math.random() * (1000 - 0) + 0);
 
     if (task.title == '' && task.description == '') {
-      console.error('No puedes crear una tarea sin datos.');
+      alert('No puede crear una tarea en blanco');
     } else {
-      list.push(task);
-      console.log(list);
       modal.current.close();
+      titleInput.current.value = '';
+      descriptionInput.current.value = '';
+      setTasks(tasks.concat(task));
+      console.log(task);
     }
-  };
-
-  const cancelTask = () => {
-    modal.current.close();
   };
 
   return (
     <>
       <h1>To Do List</h1>
 
-      <button onClick={createTask}>Create task</button>
+      <button onClick={openModalToCreateTask}>Create task</button>
 
       <dialog ref={modal}>
         <label>
@@ -59,9 +54,15 @@ function App() {
         </label>
         <br />
         <br />
-        <button onClick={cancelTask}>Close</button>
+        <button onClick={closeModalToCancelTask}>Close</button>
         <button onClick={addTask}>Add</button>
       </dialog>
+
+      <div>
+        {tasks.map((task) => {
+          return <Task key={task.id} title={task.title} description={task.description} />;
+        })}
+      </div>
     </>
   );
 }
