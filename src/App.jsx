@@ -1,6 +1,8 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Task from './components/Task/Task';
 import './App.css';
+
+let nextId = 0;
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -20,7 +22,7 @@ function App() {
     const task = {};
     task.title = `${titleInput.current.value}`;
     task.description = `${descriptionInput.current.value}`;
-    task.id = Math.floor(Math.random() * (1000 - 0) + 0);
+    task.id = nextId++;
 
     if (task.title == '' && task.description == '') {
       alert('No puede crear una tarea en blanco');
@@ -29,9 +31,16 @@ function App() {
       titleInput.current.value = '';
       descriptionInput.current.value = '';
       setTasks(tasks.concat(task));
-      console.log(task);
     }
   };
+
+  /*const deleteTask = () => {
+    const newArray = tasks.filter((t) => {
+      return;
+    });
+
+    console.log(newArray);
+  };*/
 
   return (
     <>
@@ -60,7 +69,20 @@ function App() {
 
       <div>
         {tasks.map((task) => {
-          return <Task key={task.id} title={task.title} description={task.description} />;
+          return (
+            <Task
+              key={task.id}
+              title={task.title}
+              description={task.description}
+              del={() => {
+                setTasks(
+                  tasks.filter((t) => {
+                    return t.id !== task.id;
+                  })
+                );
+              }}
+            />
+          );
         })}
       </div>
     </>
