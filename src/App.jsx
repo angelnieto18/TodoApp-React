@@ -1,11 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import Task from './components/Task/Task';
+import taskTitleInput from './components/Task/Task';
 import './App.css';
-
-let nextId = 0;
 
 function App() {
   const [tasks, setTasks] = useState([]);
+  let [title, setTitle] = useState('');
+  let [description, setDescription] = useState('');
+  let [id, setId] = useState(0);
   const modal = useRef(null);
   const titleInput = useRef(null);
   const descriptionInput = useRef(null);
@@ -20,9 +22,12 @@ function App() {
 
   const addTask = () => {
     const task = {};
-    task.title = `${titleInput.current.value}`;
-    task.description = `${descriptionInput.current.value}`;
-    task.id = nextId++;
+    setTitle((title = titleInput.current.value));
+    task.title = title;
+    setDescription((description = descriptionInput.current.value));
+    task.description = description;
+    setId(id + 1);
+    task.id = id;
 
     if (task.title == '' && task.description == '') {
       alert('No puede crear una tarea en blanco');
@@ -33,14 +38,6 @@ function App() {
       setTasks(tasks.concat(task));
     }
   };
-
-  /*const deleteTask = () => {
-    const newArray = tasks.filter((t) => {
-      return;
-    });
-
-    console.log(newArray);
-  };*/
 
   return (
     <>
