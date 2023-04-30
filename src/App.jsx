@@ -1,6 +1,5 @@
 import { useRef, useState } from 'react';
 import Task from './components/Task/Task';
-import taskTitleInput from './components/Task/Task';
 import './App.css';
 
 function App() {
@@ -32,11 +31,20 @@ function App() {
     if (task.title == '' && task.description == '') {
       alert('No puede crear una tarea en blanco');
     } else {
-      modal.current.close();
-      titleInput.current.value = '';
-      descriptionInput.current.value = '';
+      closeModalAfterAddTask();
       setTasks(tasks.concat(task));
     }
+  };
+
+  const closeModalAfterAddTask = () => {
+    modal.current.close();
+    titleInput.current.value = '';
+    descriptionInput.current.value = '';
+  };
+
+  const deleteTask = (id) => {
+    const newArray = tasks.filter((task) => task.id !== id);
+    setTasks(newArray);
   };
 
   return (
@@ -64,7 +72,7 @@ function App() {
         <button onClick={addTask}>Add</button>
       </dialog>
 
-      <div>
+      <div className='tasks__container '>
         {tasks.map((task) => {
           return (
             <Task
@@ -72,11 +80,7 @@ function App() {
               title={task.title}
               description={task.description}
               del={() => {
-                setTasks(
-                  tasks.filter((t) => {
-                    return t.id !== task.id;
-                  })
-                );
+                deleteTask(task.id);
               }}
             />
           );
